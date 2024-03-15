@@ -1,0 +1,60 @@
+version: "3.7"
+services:
+    task:
+        build:
+            context: ./
+            dockerfile: Dockerfile
+        image: task
+        container_name: task-app
+        restart: unless-stopped
+        working_dir: /var/www/
+        volumes:
+            - ./:/var/www
+        networks:
+            - task
+
+    db:
+        image: mysql:8
+        command: --max_allowed_packet=32505856
+        container_name: task-db
+        restart: unless-stopped
+        ports:
+            - "3900:3306"
+        environment:
+            MYSQL_DATABASE: ${DB_DATABASE}
+            MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+            SERVICE_TAGS: dev
+            SERVICE_NAME: mysql
+        volumes:
+            - ./docker-volumes/mysql-dump:/docker-entrypoint-initdb.d
+            - ./docker-volumes/mysql:/var/lib/mysql
+        networks:
+            - task
+
+    redis:
+        container_name: task-redis
+        image: redis
+        ports:
+            - "6380:6379"
+        volumes:
+            - ./docker-volumes/redis:/data
+        entrypoint: redis-server --appendonly yes
+        restart: always
+        networks:
+            - task
+
+    nginx:
+        image: nginx:alpine
+        container_name: task-nginx
+        restart: unless-stopped
+        ports:
+            - "8090:80"
+        volumes:
+            - ./:/var/www
+            - ./docker-volumes/nginx:/etc/nginx/conf.d/
+        networks:
+            - task
+
+networks:
+    task:
+        driver: bridge
