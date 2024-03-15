@@ -39,23 +39,46 @@ class populateRealTimePrices extends Command implements Isolatable
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): void
     {
         foreach (Quote::$symbols as $symbol) {
-            $endpoint = $this->alphaVantageAPI->getQuoteEndpoint($symbol);
-            $payload = $this->alphaVantageAPI->getContents($endpoint);
-            $currentPrice = isset($payload['Global Quote']) ? $payload['Global Quote']['05. price'] * 100 : mt_rand(1, 400);
 
             $cacheKey = md5($symbol);
-            $previousPrice = Cache::get($cacheKey);
-
-            if ($currentPrice === $previousPrice) {
+            if (Cache::has($cacheKey)) {
                 continue;
             }
 
-            Cache::put($cacheKey, $currentPrice, now()->addDay());
+            try {
+                // Lock the cache for 10 seconds to avoid race condition
+                Cache::lock('priceUpdates', 10)->get(function () use ($symbol, $cacheKey) {
+                    $currentPrice = $this->getCurrentPrice($symbol);
+                    $previousPrice = Cache::get($cacheKey);
 
-            Quote::query()->where('symbol', $symbol)->update(['price' => $currentPrice]);
+                    if ($currentPrice !== $previousPrice) {
+                        Cache::put($cacheKey, $currentPrice, now()->addMinutes(15));
+
+                        Quote::query()->where('symbol', $symbol)->update(['price' => $currentPrice]);
+                    }
+                });
+            } catch (\Throwable $e) {
+                // Log error to file
+            }
         }
+    }
+
+    /**
+     * @param string $symbol
+     * @return int
+     */
+    function getCurrentPrice(string $symbol): int
+    {
+        $endpoint = $this->alphaVantageAPI->getQuoteEndpoint($symbol);
+        $payload = $this->alphaVantageAPI->getContents($endpoint);
+
+        if (isset($payload['Global Quote'])) {
+            return ((int) $payload['Global Quote']['05. price'] * 100);
+        }
+
+        return mt_rand(1, 400);
     }
 }
