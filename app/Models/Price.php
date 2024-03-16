@@ -6,28 +6,28 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Quote extends Model
+class Price extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'symbol',
+        'price',
     ];
 
     protected function casts(): array
     {
         return [
-            'symbol' => 'string',
+            'price' => 'float',
         ];
     }
 
     /**
-     * Get the prices for the quote.
+     * Get the quote that owns the price.
      */
-    public function prices(): HasMany
+    public function quote(): BelongsTo
     {
-        return $this->hasMany(Price::class);
+        return $this->belongsTo(Quote::class);
     }
 }

@@ -8,35 +8,25 @@ use App\Models\Quote;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class QuoteSeeder extends Seeder
+class PriceSeeder extends Seeder
 {
-    public static array $symbols = [
-        'IBM',
-        'AAPL',
-        'MSFT',
-        'AMZN',
-        'TSLA',
-        'AMD',
-        'NVDA',
-        'ADBE',
-        'ACT',
-        'ADD',
-    ];
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        $data = [];
+        $ids = Quote::query()->select(['id'])->pluck('id');
 
-        foreach (static::$symbols as $symbol) {
+        $data = [];
+        foreach ($ids as $id) {
             $data[] = [
-                'symbol' => $symbol,
+                'quote_id' => $id,
+                'price' => mt_rand(1,500) / 10,
                 'created_at' => now()->toDateTimeString(),
                 'updated_at' => now()->toDateTimeString(),
             ];
         }
 
-        DB::table('quotes')->insert($data);
+        DB::table('prices')->insert($data);
     }
 }
