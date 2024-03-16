@@ -2,9 +2,9 @@
 
 namespace App\Jobs;
 
+use App\API\AlphaVantageApiService;
 use App\Jobs\Middleware\JobRateLimited;
 use App\Models\Quote;
-use App\Stock\API\AlphaVantageAPI;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -31,7 +31,7 @@ class PopulateRealTimePrices implements ShouldQueue
      */
     public int $tries = 1;
 
-    private AlphaVantageAPI $alphaVantageAPI;
+    private AlphaVantageApiService $alphaVantageAPI;
 
     /**
      * Get the middleware the job should pass through.
@@ -48,7 +48,7 @@ class PopulateRealTimePrices implements ShouldQueue
      */
     public function __construct()
     {
-        $this->alphaVantageAPI = new AlphaVantageAPI();
+        $this->alphaVantageAPI = new AlphaVantageApiService();
     }
 
     /**

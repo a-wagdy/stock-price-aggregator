@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Stock\API;
+namespace App\API;
 
 use Mockery\Exception;
 
-class AlphaVantageAPI
+class AlphaVantageApiService
 {
     public const API_ENDPOINT = 'https://alphavantage.co/query';
 
