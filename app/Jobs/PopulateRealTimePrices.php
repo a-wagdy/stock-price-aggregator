@@ -10,7 +10,6 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -60,13 +59,6 @@ class PopulateRealTimePrices implements ShouldQueue
         $symbols = Quote::query()->select(['symbol'])->pluck('symbol');
 
         foreach ($symbols as $symbol) {
-
-            $cacheKey = md5($symbol);
-
-            if (Cache::has($cacheKey)) {
-                continue;
-            }
-
             try {
                 $currentPrice = $this->alphaVantageAPI->getCurrentPriceForQuote($symbol);
 
