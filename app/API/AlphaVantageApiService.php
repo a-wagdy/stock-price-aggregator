@@ -21,7 +21,7 @@ class AlphaVantageApiService
         $payload = $this->getContents($endpoint);
 
         if (!isset($payload['Global Quote']) || !isset($payload['Global Quote']['05. price'])) {
-            throw new Exception('Encountered unexpected payload: ' . json_encode($payload));
+            throw new Exception("Encountered unexpected payload for symbol {$symbol} " . json_encode($payload));
         }
 
         $currentPrice =  $payload['Global Quote']['05. price'];
@@ -75,13 +75,13 @@ class AlphaVantageApiService
         $content = file_get_contents($endpoint);
 
         if (!$content) {
-            throw new Exception('Error getting the content');
+            throw new Exception("Error getting the content for endpoint: {$endpoint}");
         }
 
         $decodedContent = json_decode($content, true);
 
         if (!\is_array($decodedContent)) {
-            throw new Exception('Error decoding JSON content');
+            throw new Exception("Error decoding JSON content for endpoint: {$endpoint}");
         }
 
         return $decodedContent;
