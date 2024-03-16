@@ -69,17 +69,11 @@ class PopulateRealTimePrices implements ShouldQueue
 
             try {
                 $currentPrice = $this->alphaVantageAPI->getCurrentPriceForQuote($symbol);
-                $previousPrice = Cache::get($cacheKey);
-
-                if ($currentPrice === $previousPrice) {
-                    continue;
-                }
-
-                Cache::put($cacheKey, $currentPrice, now()->addMinutes(15));
 
                 DB::transaction(function () use ($symbol, $currentPrice) {
-                    $quote = Quote::query()->select(['id', 'symbol'])->where('symbol', $symbol)->first();
+                    $quote = Quote::query()->where('symbol', $symbol)->first();
                     $quote->prices()->create(['price' => $currentPrice]);
+                    $quote->getLatestPrices();
                 });
 
             } catch (\Throwable $exception) {
