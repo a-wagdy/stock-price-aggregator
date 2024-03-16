@@ -31,7 +31,6 @@ class PopulateRealTimePrices implements ShouldQueue
      */
     public int $tries = 1;
 
-    private AlphaVantageApiService $alphaVantageAPI;
 
     /**
      * Get the middleware the job should pass through.
@@ -43,12 +42,8 @@ class PopulateRealTimePrices implements ShouldQueue
         return [new JobRateLimited];
     }
 
-    /**
-     * Create a new job instance.
-     */
-    public function __construct()
+    public function __construct(private readonly AlphaVantageApiService $alphaVantageAPI)
     {
-        $this->alphaVantageAPI = new AlphaVantageApiService();
     }
 
     /**
