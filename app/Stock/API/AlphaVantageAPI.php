@@ -20,13 +20,13 @@ class AlphaVantageAPI
         $payload = $this->getContents($endpoint);
 
         if (!isset($payload['Global Quote']) || !isset($payload['Global Quote']['05. price'])) {
-            throw new Exception('Encountered unexpected payload');
+            throw new Exception('Encountered unexpected payload: ' . json_encode($payload));
         }
 
         $currentPrice =  $payload['Global Quote']['05. price'];
 
         if (!\is_numeric($currentPrice)) {
-            throw new Exception("Error getting current price for quote {$symbol}");
+            throw new Exception("Error getting current price for quote: {$symbol}, got: {$currentPrice}");
         }
 
         return (float) $currentPrice;
