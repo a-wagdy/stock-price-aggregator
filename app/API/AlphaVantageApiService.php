@@ -66,9 +66,9 @@ class AlphaVantageApiService
      * Get the content of the endpoint
      *
      * @param string $endpoint
-     * @return mixed
+     * @return array
      */
-    public function getContents(string $endpoint): mixed
+    public function getContents(string $endpoint): array
     {
         $content = file_get_contents($endpoint);
 
@@ -76,6 +76,12 @@ class AlphaVantageApiService
             throw new Exception('Error getting the content');
         }
 
-        return json_decode($content,true);
+        $decodedContent = json_decode($content, true);
+
+        if (!\is_array($decodedContent)) {
+            throw new Exception('Error decoding JSON content');
+        }
+
+        return $decodedContent;
     }
 }
