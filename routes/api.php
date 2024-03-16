@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\API\StockPriceController;
+use App\Http\Controllers\API\ReportController;
 use Illuminate\Support\Facades\Route;
 
 
-Route::get('/quotes/report', [StockPriceController::class, 'report'])->middleware('api');
+Route::get('/report', [ReportController::class, 'index'])->middleware('api');
