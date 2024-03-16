@@ -2,7 +2,7 @@
 
 namespace App\API;
 
-use Mockery\Exception;
+use Exception;
 
 class AlphaVantageApiService
 {
@@ -13,6 +13,7 @@ class AlphaVantageApiService
      *
      * @param string $symbol
      * @return float
+     * @throws Exception
      */
     public function getCurrentPriceForQuote(string $symbol): float
     {
@@ -67,6 +68,7 @@ class AlphaVantageApiService
      *
      * @param string $endpoint
      * @return array
+     * @throws Exception
      */
     public function getContents(string $endpoint): array
     {
