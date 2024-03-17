@@ -55,6 +55,22 @@ In this repo, you'll find the [Postman Collection](https://github.com/a-wagdy/ta
 Run the following commands
 
 1. `docker-compose exec task php artisan migrate --env=testing`
-2. `docker-compose exec task php artisan test --env=testing`  
+2. `docker-compose exec task php artisan test --env=testing`
+
+# Sample Flow
+
+```mermaid
+graph TD;
+    A[Start] --> B{Scheduler runs every min};
+    B -->|Yes| C[Dispatch PopulateRealTimePrices job];
+    C --> D[Call Alpha Vantage API];
+    D --> E{Data received successfully?};
+    E -->|Yes| F[Store prices in the database];
+    F --> G[Cache prices for 15 minutes];
+    G --> H[End];
+    E -->|No| I[Log error];
+    I --> B;
+    B -->|No| H[End];
+```
 
 
