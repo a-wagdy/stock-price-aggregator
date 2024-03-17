@@ -32,12 +32,14 @@ class Price extends Model
     use HasFactory;
 
     protected $fillable = [
+        'quote_id',
         'price',
     ];
 
     protected function casts(): array
     {
         return [
+            'quote_id' => 'integer',
             'price' => 'float',
         ];
     }

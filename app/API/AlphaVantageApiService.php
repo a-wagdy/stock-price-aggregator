@@ -3,6 +3,7 @@
 namespace App\API;
 
 use Exception;
+use Illuminate\Support\Facades\Log;
 
 class AlphaVantageApiService
 {
@@ -12,25 +13,29 @@ class AlphaVantageApiService
      * Get the latest price for symbol
      *
      * @param string $symbol
-     * @return float
-     * @throws Exception
+     * @return ?float
      */
-    public function getCurrentPriceForQuote(string $symbol): float
+    public function fetchPriceForQuote(string $symbol): ?float
     {
-        $endpoint = $this->getQuoteEndpoint($symbol);
-        $payload = $this->getContents($endpoint);
+        try {
+            $endpoint = $this->getQuoteEndpoint($symbol);
+            $payload = $this->getContents($endpoint);
 
-        if (!isset($payload['Global Quote']) || !isset($payload['Global Quote']['05. price'])) {
-            throw new Exception("Encountered unexpected payload for symbol {$symbol} " . json_encode($payload));
+            if (!isset($payload['Global Quote']) || !isset($payload['Global Quote']['05. price'])) {
+                throw new Exception("Encountered unexpected payload for symbol {$symbol} " . json_encode($payload));
+            }
+
+            $currentPrice =  $payload['Global Quote']['05. price'];
+
+            if (!\is_numeric($currentPrice)) {
+                throw new Exception("Error getting current price for quote: {$symbol}, got: {$currentPrice}");
+            }
+
+            return (float) $currentPrice;
+        } catch (Exception $exception) {
+            Log::error("Failed to fetch price for symbol {$symbol}: {$exception->getMessage()}");
+            return null;
         }
-
-        $currentPrice =  $payload['Global Quote']['05. price'];
-
-        if (!\is_numeric($currentPrice)) {
-            throw new Exception("Error getting current price for quote: {$symbol}, got: {$currentPrice}");
-        }
-
-        return (float) $currentPrice;
     }
 
     /**
