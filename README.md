@@ -28,7 +28,6 @@ Run the following commands
 
 1. `docker-compose exec task php artisan migrate`
 2. `docker-compose exec task php artisan db:seed --class=QuoteSeeder`
-3. `docker-compose exec task php artisan db:seed --class=PriceSeeder`
 
 > Open two terminals to run the schedule and listener commands
 
