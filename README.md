@@ -50,4 +50,11 @@ In this repo, you'll find the [Postman Collection](https://github.com/a-wagdy/Im
 
 <img width="669" alt="Screenshot 2024-03-17 at 3 20 01 AM" src="https://github.com/a-wagdy/task/assets/64163189/99382300-06d1-4433-97c7-d6a2b5d3609d">
 
+# Running test cases
+
+Run the following commands
+
+1. `docker-compose exec task php artisan migrate --env=testing`
+2. `docker-compose exec task php artisan test --env=testing`  
+
 
