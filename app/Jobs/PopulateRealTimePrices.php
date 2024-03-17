@@ -54,17 +54,20 @@ class PopulateRealTimePrices implements ShouldQueue
         $symbols = Quote::query()->select(['symbol'])->pluck('symbol');
 
         foreach ($symbols as $symbol) {
-            try {
-                $currentPrice = $this->alphaVantageAPI->getCurrentPriceForQuote($symbol);
+            $currentPrice = $this->alphaVantageAPI->fetchPriceForQuote($symbol);
 
+            if (\is_null($currentPrice)) {
+                continue;
+            }
+
+            try {
                 DB::transaction(function () use ($symbol, $currentPrice) {
                     $quote = Quote::query()->where('symbol', $symbol)->first();
                     $quote->prices()->create(['price' => $currentPrice]);
                     $quote->getLatestPrices();
                 });
-
-            } catch (\Throwable $exception) {
-                Log::error('PopulateRealTimePrices has failed: ' . $exception->getMessage());
+            } catch (\Throwable $e) {
+                Log::error('PopulateRealTimePrices has failed: ' . $e->getMessage());
             }
         }
     }
