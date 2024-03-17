@@ -35,7 +35,7 @@ Run the following commands
 
 # REST API
 
-In this repo, you'll find the [Postman Collection](https://github.com/a-wagdy/Import-tool/blob/main/Import%20Tool.postman_collection.json), and the [CSV file](https://github.com/a-wagdy/Import-tool/blob/main/import.csv).
+In this repo, you'll find the [Postman Collection](https://github.com/a-wagdy/task/blob/main/postman_collection.json)
 
 ## Stock prices report
 
