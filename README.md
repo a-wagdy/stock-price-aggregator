@@ -17,7 +17,7 @@
 3. Build the image by running `docker-compose build`. This will take a few minutes.
 4. Then run `docker-compose up -d`.
 5. And then `docker-compose exec task composer install`
-6. Please generate a new Alpha Vantage [API key](https://www.alphavantage.co/support/#api-key) and place it as the value of `ALPHA_VANTAGE_KEY` in the `.env` file. 
+6. Please generate new [API key](https://www.alphavantage.co/support/#api-key) and place it as the value of `ALPHA_VANTAGE_KEY` in the `.env` file. 
 7. Then execute `docker-compose exec task php artisan config:clear`
 
 To make sure that the image is working, please open your browser and navigate to `http://127.0.0.1:8090/`.
