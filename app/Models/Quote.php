@@ -59,7 +59,7 @@ class Quote extends Model
      */
     public function getLatestPrices(int $limit = 10): Collection
     {
-        $cacheKey = md5($this->symbol);
+        $cacheKey = $this->symbol;
 
         return Cache::remember($cacheKey, now()->addMinutes(15), function () use ($limit) {
             return Price::query()
