@@ -33,8 +33,8 @@ Run the following commands
 
 > Open two terminals to run the schedule and listener commands
 
-`docker-compose exec task php artisan schedule:work`
-`docker-compose exec task php artisan queue:listen`
+1. `docker-compose exec task php artisan schedule:work`
+2. `docker-compose exec task php artisan queue:listen`
 
 # REST API
 
