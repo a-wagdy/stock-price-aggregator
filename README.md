@@ -26,12 +26,12 @@ To make sure that the image is working, please open your browser and navigate to
 
 # Upon successful installation
 
-Run the following commands
+### Run the following commands
 
 1. `docker-compose exec task php artisan migrate`
 2. `docker-compose exec task php artisan db:seed --class=QuoteSeeder`
 
-> Open two terminals to run the schedule and listener commands
+### Open two terminals to run the schedule and listener commands
 
 1. `docker-compose exec task php artisan schedule:work`
 2. `docker-compose exec task php artisan queue:listen`
