@@ -1,6 +1,6 @@
 # Stock Price Aggregator
 
-I'm using the Alpha Vantage API.
+Using the Alpha Vantage API.
 
 # Stack
 
